@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار لقياس مستوى الطالب في الوحدة الأولى كثيرات الحدود</title>
+    <!-- استدعاء خط عربي مريح للعين (Cairo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- إعدادات ومكتبة MathJax المحدثة والمستقرة لعرض الرموز الرياضية -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success-bg: #ecfdf5;
+            --success-text: #065f46;
+            --warning-bg: #fffbeb;
+            --warning-text: #92400e;
+            --error-bg: #fef2f2;
+            --error-text: #991b1b;
+        }
+
+        body {
+            font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 1.9rem;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .section-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 24px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .question-box {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .question-box:last-of-type {
+            border-bottom: none;
+            margin-bottom: 10px;
+            padding-bottom: 0;
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.15rem;
+            margin-bottom: 16px;
+            color: #334155;
+            line-height: 1.7;
+        }
+
+        .options-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        @media (max-width: 650px) {
+            .options-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 14px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1.05rem;
+            font-weight: 500;
+        }
+
+        .option-label:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .option-label input {
+            margin-left: 14px;
+            accent-color: var(--primary);
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .option-label.correct {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46;
+        }
+
+        .option-label.incorrect {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b;
+        }
+
+        .explanation-text {
+            margin-top: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #047857;
+            display: none;
+        }
+
+        .btn-submit, .btn-review {
+            display: block;
+            width: 100%;
+            border: none;
+            padding: 14px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            margin-top: 15px;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .btn-submit {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-review {
+            background-color: #0d9488;
+            color: white;
+            display: none;
+        }
+
+        .btn-review:hover {
+            background-color: #0f766e;
+        }
+
+        .feedback-box {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            font-weight: 500;
+            line-height: 1.8;
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+            font-size: 1.05rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback-success {
+            background-color: var(--success-bg);
+            color: var(--success-text);
+            border: 1px solid #a7f3d0;
+        }
+
+        .feedback-warning {
+            background-color: var(--warning-bg);
+            color: var(--warning-text);
+            border: 1px solid #fde68a;
+        }
+
+        .feedback-error {
+            background-color: var(--error-bg);
+            color: var(--error-text);
+            border: 1px solid #fecaca;
+        }
+
+        .feedback-error ol {
+            margin: 10px 0 0 0;
+            padding-right: 20px;
+        }
+
+        .feedback-error li {
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>اختبار لقياس مستوى الطالب في الوحدة الأولى كثيرات الحدود</h1>
+        <p>أجب عن الأسئلة التالية لاختبار فهمك وتدرجك المهاري بكل يسر وسهولة</p>
+    </header>
+
+    <!-- القسم الأول: المعامل الرئيسي -->
+    <div class="section-card" id="section-1">
+        <div class="section-title">
+            <span>📌</span> 1. المعامل الرئيسي لكثيرة الحدود
+        </div>
+        
+        <div class="question-box" data-q="1">
+            <div class="question-text">ما هو المعامل الرئيسي لكثيرة الحدود&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\(3x^4 - 2x^2 + 7x - 11\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q1"><span class="option-text">\(3\)</span></label>
+                <label class="option-label"><input type="radio" name="q1"><span class="option-text">\(-2\)</span></label>
+                <label class="option-label"><input type="radio" name="q1"><span class="option-text">\(7\)</span></label>
+                <label class="option-label"><input type="radio" name="q1"><span class="option-text">\(-11\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-1"></div>
+        </div>
+
+        <div class="question-box" data-q="2">
+            <div class="question-text">ما هو المعامل الرئيسي لكثيرة الحدود&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\(-3x^3 + 4x^2 + 5\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q2"><span class="option-text">\(-3\)</span></label>
+                <label class="option-label"><input type="radio" name="q2"><span class="option-text">\(5\)</span></label>
+                <label class="option-label"><input type="radio" name="q2"><span class="option-text">\(4\)</span></label>
+                <label class="option-label"><input type="radio" name="q2"><span class="option-text">\(0\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-2"></div>
+        </div>
+
+        <div class="question-box" data-q="3">
+            <div class="question-text">ما هو المعامل الرئيسي لكثيرة الحدود&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\(2x^3 - 5x\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q3"><span class="option-text">\(2\)</span></label>
+                <label class="option-label"><input type="radio" name="q3"><span class="option-text">\(-5\)</span></label>
+                <label class="option-label"><input type="radio" name="q3"><span class="option-text">\(0\)</span></label>
+                <label class="option-label"><input type="radio" name="q3"><span class="option-text">\(3\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-3"></div>
+        </div>
+
+        <div class="question-box" data-q="4">
+            <div class="question-text">ما هو المعامل الرئيسي لكثيرة الحدود&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\(-x^5 + 4x^3 - 2\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q4"><span class="option-text">\(-1\)</span></label>
+                <label class="option-label"><input type="radio" name="q4"><span class="option-text">\(1\)</span></label>
+                <label class="option-label"><input type="radio" name="q4"><span class="option-text">\(-2\)</span></label>
+                <label class="option-label"><input type="radio" name="q4"><span class="option-text">\(5\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-4"></div>
+        </div>
+
+        <div class="question-box" data-q="5">
+            <div class="question-text">ما هو المعامل الرئيسي لكثيرة الحدود&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\(-8x^4 + 6x^2 + x\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q5"><span class="option-text">\(-8\)</span></label>
+                <label class="option-label"><input type="radio" name="q5"><span class="option-text">\(6\)</span></label>
+                <label class="option-label"><input type="radio" name="q5"><span class="option-text">\(1\)</span></label>
+                <label class="option-label"><input type="radio" name="q5"><span class="option-text">\(-4\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-5"></div>
+        </div>
+
+        <button class="btn-submit" onclick="checkSection(1, 1, 5)">تحقق من إجابات القسم الأول</button>
+        <button class="btn-review" id="btn-review-1" onclick="showReview(1, 1, 5)">مراجعة الأخطاء وتصحيحها</button>
+        <div class="feedback-box" id="feedback-1"></div>
+    </div>
+
+    <!-- القسم الثاني: درجة كثيرة الحدود -->
+    <div class="section-card" id="section-2">
+        <div class="section-title">
+            <span>📌</span> 2. درجة كثيرة الحدود
+        </div>
+        
+        <div class="question-box" data-q="6">
+            <div class="question-text">ما هي درجة كثيرة الحدود&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\(3x^4 - 2x^2 + 7x - 11\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q6"><span class="option-text">الدرجة الرابعة</span></label>
+                <label class="option-label"><input type="radio" name="q6"><span class="option-text">الدرجة الثالثة</span></label>
+                <label class="option-label"><input type="radio" name="q6"><span class="option-text">الدرجة الثانية</span></label>
+                <label class="option-label"><input type="radio" name="q6"><span class="option-text">الدرجة الأولى</span></label>
+            </div>
+            <div class="explanation-text" id="exp-6"></div>
+        </div>
+
+        <div class="question-box" data-q="7">
+            <div class="question-text">ما هي درجة كثيرة الحدود&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\(-3x^3 + 4x^2 + 5\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q7"><span class="option-text">الدرجة الثالثة</span></label>
+                <label class="option-label"><input type="radio" name="q7"><span class="option-text">الدرجة الثانية</span></label>
+                <label class="option-label"><input type="radio" name="q7"><span class="option-text">الدرجة الرابعة</span></label>
+                <label class="option-label"><input type="radio" name="q7"><span class="option-text">الدرجة الأولى</span></label>
+            </div>
+            <div class="explanation-text" id="exp-7"></div>
+        </div>
+
+        <div class="question-box" data-q="8">
+            <div class="question-text">ما هي درجة كثيرة الحدود&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\(2x - 5\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q8"><span class="option-text">الدرجة الأولى</span></label>
+                <label class="option-label"><input type="radio" name="q8"><span class="option-text">الدرجة الثانية</span></label>
+                <label class="option-label"><input type="radio" name="q8"><span class="option-text">الدرجة الصفرية</span></label>
+                <label class="option-label"><input type="radio" name="q8"><span class="option-text">الدرجة الثالثة</span></label>
+            </div>
+            <div class="explanation-text" id="exp-8"></div>
+        </div>
+
+        <div class="question-box" data-q="9">
+            <div class="question-text">ما هي درجة كثيرة الحدود&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\(2x^6 + 5\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q9"><span class="option-text">الدرجة السادسة</span></label>
+                <label class="option-label"><input type="radio" name="q9"><span class="option-text">الدرجة الصفرية</span></label>
+                <label class="option-label"><input type="radio" name="q9"><span class="option-text">الدرجة الأولى</span></label>
+                <label class="option-label"><input type="radio" name="q9"><span class="option-text">الدرجة الثانية</span></label>
+            </div>
+            <div class="explanation-text" id="exp-9"></div>
+        </div>
+
+        <div class="question-box" data-q="10">
+            <div class="question-text">ما هي درجة كثيرة الحدود&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\(x^5 - 2x^3 + 1\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q10"><span class="option-text">الدرجة الخامسة</span></label>
+                <label class="option-label"><input type="radio" name="q10"><span class="option-text">الدرجة الثالثة</span></label>
+                <label class="option-label"><input type="radio" name="q10"><span class="option-text">الدرجة الثانية</span></label>
+                <label class="option-label"><input type="radio" name="q10"><span class="option-text">الدرجة الرابعة</span></label>
+            </div>
+            <div class="explanation-text" id="exp-10"></div>
+        </div>
+
+        <button class="btn-submit" onclick="checkSection(2, 6, 10)">تحقق من إجابات القسم الثاني</button>
+        <button class="btn-review" id="btn-review-2" onclick="showReview(2, 6, 10)">مراجعة الأخطاء وتصحيحها</button>
+        <div class="feedback-box" id="feedback-2"></div>
+    </div>
+
+    <!-- القسم الثالث: الحد الثابت لكثيرة الحدود -->
+    <div class="section-card" id="section-3">
+        <div class="section-title">
+            <span>📌</span> 3. الحد الثابت لكثيرة الحدود
+        </div>
+        
+        <div class="question-box" data-q="11">
+            <div class="question-text">ما هو الحد الثابت لكثيرة الحدود&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\(2x^2 + 4x + 1\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q11"><span class="option-text">\(1\)</span></label>
+                <label class="option-label"><input type="radio" name="q11"><span class="option-text">\(2\)</span></label>
+                <label class="option-label"><input type="radio" name="q11"><span class="option-text">\(4\)</span></label>
+                <label class="option-label"><input type="radio" name="q11"><span class="option-text">\(0\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-11"></div>
+        </div>
+
+        <div class="question-box" data-q="12">
+            <div class="question-text">ما هو الحد الثابت لكثيرة الحدود&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\(x + 9\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q12"><span class="option-text">\(9\)</span></label>
+                <label class="option-label"><input type="radio" name="q12"><span class="option-text">\(1\)</span></label>
+                <label class="option-label"><input type="radio" name="q12"><span class="option-text">\(0\)</span></label>
+                <label class="option-label"><input type="radio" name="q12"><span class="option-text">\(-9\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-12"></div>
+        </div>
+
+        <div class="question-box" data-q="13">
+            <div class="question-text">ما هو الحد الثابت لكثيرة الحدود&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\(6x^3 + 2x^2 - 5\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q13"><span class="option-text">\(-5\)</span></label>
+                <label class="option-label"><input type="radio" name="q13"><span class="option-text">\(6\)</span></label>
+                <label class="option-label"><input type="radio" name="q13"><span class="option-text">\(2\)</span></label>
+                <label class="option-label"><input type="radio" name="q13"><span class="option-text">\(0\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-13"></div>
+        </div>
+
+        <div class="question-box" data-q="14">
+            <div class="question-text">ما هو الحد الثابت لكثيرة الحدود&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\(x^2 + 5x - 8\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q14"><span class="option-text">\(-8\)</span></label>
+                <label class="option-label"><input type="radio" name="q14"><span class="option-text">\(5\)</span></label>
+                <label class="option-label"><input type="radio" name="q14"><span class="option-text">\(1\)</span></label>
+                <label class="option-label"><input type="radio" name="q14"><span class="option-text">\(0\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-14"></div>
+        </div>
+
+        <div class="question-box" data-q="15">
+            <div class="question-text">ما هو الحد الثابت لكثيرة الحدود&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\(x^2 + 4x\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q15"><span class="option-text">\(0\)</span></label>
+                <label class="option-label"><input type="radio" name="q15"><span class="option-text">\(4\)</span></label>
+                <label class="option-label"><input type="radio" name="q15"><span class="option-text">\(1\)</span></label>
+                <label class="option-label"><input type="radio" name="q15"><span class="option-text">\(-4\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-15"></div>
+        </div>
+
+        <button class="btn-submit" onclick="checkSection(3, 11, 15)">تحقق من إجابات القسم الثالث</button>
+        <button class="btn-review" id="btn-review-3" onclick="showReview(3, 11, 15)">مراجعة الأخطاء وتصحيحها</button>
+        <div class="feedback-box" id="feedback-3"></div>
+    </div>
+
+    <!-- القسم الرابع: جمع كثيرات الحدود -->
+    <div class="section-card" id="section-4">
+        <div class="section-title">
+            <span>📌</span> 4. جمع كثيرات الحدود
+        </div>
+        
+        <div class="question-box" data-q="16">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\((3x^2 + 5x + 2) + (2x^2 + x + 4)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q16"><span class="option-text">\(5x^2 + 6x + 6\)</span></label>
+                <label class="option-label"><input type="radio" name="q16"><span class="option-text">\(5x^2 + 4x + 6\)</span></label>
+                <label class="option-label"><input type="radio" name="q16"><span class="option-text">\(x^2 + 6x + 6\)</span></label>
+                <label class="option-label"><input type="radio" name="q16"><span class="option-text">\(5x^4 + 6x^2 + 6\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-16"></div>
+        </div>
+
+        <div class="question-box" data-q="17">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\((x^2 + 3x - 4) + (2x^2 + x + 5)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q17"><span class="option-text">\(3x^2 + 4x + 1\)</span></label>
+                <label class="option-label"><input type="radio" name="q17"><span class="option-text">\(3x^2 + 2x + 1\)</span></label>
+                <label class="option-label"><input type="radio" name="q17"><span class="option-text">\(3x^2 + 4x + 9\)</span></label>
+                <label class="option-label"><input type="radio" name="q17"><span class="option-text">\(x^2 + 4x + 1\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-17"></div>
+        </div>
+
+        <div class="question-box" data-q="18">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\((x^2 + 2x + 3) + (4x - 5)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q18"><span class="option-text">\(x^2 + 6x - 2\)</span></label>
+                <label class="option-label"><input type="radio" name="q18"><span class="option-text">\(x^2 + 2x - 2\)</span></label>
+                <label class="option-label"><input type="radio" name="q18"><span class="option-text">\(5x^2 + 2x - 2\)</span></label>
+                <label class="option-label"><input type="radio" name="q18"><span class="option-text">\(x^2 + 6x + 2\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-18"></div>
+        </div>
+
+        <div class="question-box" data-q="19">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\((2x^3 + x) + (x^3 - 4x)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q19"><span class="option-text">\(3x^3 - 3x\)</span></label>
+                <label class="option-label"><input type="radio" name="q19"><span class="option-text">\(3x^6 - 3x^2\)</span></label>
+                <label class="option-label"><input type="radio" name="q19"><span class="option-text">\(3x^3 + 5x\)</span></label>
+                <label class="option-label"><input type="radio" name="q19"><span class="option-text">\(x^3 - 3x\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-19"></div>
+        </div>
+
+        <div class="question-box" data-q="20">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\((5x^2 - 7) + (3x^2 + 2)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q20"><span class="option-text">\(8x^2 - 5\)</span></label>
+                <label class="option-label"><input type="radio" name="q20"><span class="option-text">\(8x^2 - 9\)</span></label>
+                <label class="option-label"><input type="radio" name="q20"><span class="option-text">\(8x^4 - 5\)</span></label>
+                <label class="option-label"><input type="radio" name="q20"><span class="option-text">\(8x^2 + 5\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-20"></div>
+        </div>
+
+        <button class="btn-submit" onclick="checkSection(4, 16, 20)">تحقق من إجابات القسم الرابع</button>
+        <button class="btn-review" id="btn-review-4" onclick="showReview(4, 16, 20)">مراجعة الأخطاء وتصحيحها</button>
+        <div class="feedback-box" id="feedback-4"></div>
+    </div>
+
+    <!-- القسم الخامس: طرح كثيرات الحدود -->
+    <div class="section-card" id="section-5">
+        <div class="section-title">
+            <span>📌</span> 5. طرح كثيرات الحدود
+        </div>
+        
+        <div class="question-box" data-q="21">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\((5x^2 + 3x + 1) - (2x^2 + x + 4)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q21"><span class="option-text">\(3x^2 + 2x - 3\)</span></label>
+                <label class="option-label"><input type="radio" name="q21"><span class="option-text">\(3x^2 + 4x - 3\)</span></label>
+                <label class="option-label"><input type="radio" name="q21"><span class="option-text">\(7x^2 + 4x + 5\)</span></label>
+                <label class="option-label"><input type="radio" name="q21"><span class="option-text">\(3x^2 + 2x + 5\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-21"></div>
+        </div>
+
+        <div class="question-box" data-q="22">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\((4x^2 + 5x - 2) - (x^2 + 2x - 5)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q22"><span class="option-text">\(3x^2 + 3x + 3\)</span></label>
+                <label class="option-label"><input type="radio" name="q22"><span class="option-text">\(3x^2 + 7x + 3\)</span></label>
+                <label class="option-label"><input type="radio" name="q22"><span class="option-text">\(5x^2 + 7x + 7\)</span></label>
+                <label class="option-label"><input type="radio" name="q22"><span class="option-text">\(3x^2 + 3x - 7\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-22"></div>
+        </div>
+
+        <div class="question-box" data-q="23">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\((7x^3 + 4x^2) - (2x^3 + 3x^2)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q23"><span class="option-text">\(5x^3 + x^2\)</span></label>
+                <label class="option-label"><input type="radio" name="q23"><span class="option-text">\(5x^3 - x^2\)</span></label>
+                <label class="option-label"><input type="radio" name="q23"><span class="option-text">\(9x^3 + x^2\)</span></label>
+                <label class="option-label"><input type="radio" name="q23"><span class="option-text">\(5x^3 + 7x^2\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-23"></div>
+        </div>
+
+        <div class="question-box" data-q="24">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\((6x + 9) - (2x - 4)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q24"><span class="option-text">\(4x + 13\)</span></label>
+                <label class="option-label"><input type="radio" name="q24"><span class="option-text">\(4x - 13\)</span></label>
+                <label class="option-label"><input type="radio" name="q24"><span class="option-text">\(8x + 13\)</span></label>
+                <label class="option-label"><input type="radio" name="q24"><span class="option-text">\(4x + 5\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-24"></div>
+        </div>
+
+        <div class="question-box" data-q="25">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\((5x^2 + 6x + 8) - (x^2 + 3)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q25"><span class="option-text">\(4x^2 + 6x + 5\)</span></label>
+                <label class="option-label"><input type="radio" name="q25"><span class="option-text">\(4x^2 - 6x + 5\)</span></label>
+                <label class="option-label"><input type="radio" name="q25"><span class="option-text">\(6x^2 + 6x + 11\)</span></label>
+                <label class="option-label"><input type="radio" name="q25"><span class="option-text">\(4x^2 + 6x + 11\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-25"></div>
+        </div>
+
+        <button class="btn-submit" onclick="checkSection(5, 21, 25)">تحقق من إجابات القسم الخامس</button>
+        <button class="btn-review" id="btn-review-5" onclick="showReview(5, 21, 25)">مراجعة الأخطاء وتصحيحها</button>
+        <div class="feedback-box" id="feedback-5"></div>
+    </div>
+
+    <!-- القسم السادس: ضرب كثيرة الحدود بعدد حقيقي -->
+    <div class="section-card" id="section-6">
+        <div class="section-title">
+            <span>📌</span> 6. ضرب كثيرة الحدود بعدد حقيقي
+        </div>
+        
+        <div class="question-box" data-q="26">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\(3(2x^2 + 4x + 5)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q26"><span class="option-text">\(6x^2 + 12x + 15\)</span></label>
+                <label class="option-label"><input type="radio" name="q26"><span class="option-text">\(6x^2 + 4x + 5\)</span></label>
+                <label class="option-label"><input type="radio" name="q26"><span class="option-text">\(6x^2 + 12x + 5\)</span></label>
+                <label class="option-label"><input type="radio" name="q26"><span class="option-text">\(5x^2 + 7x + 8\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-26"></div>
+        </div>
+
+        <div class="question-box" data-q="27">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\(2(x^3 - 3x^2 + 4)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q27"><span class="option-text">\(2x^3 - 6x^2 + 8\)</span></label>
+                <label class="option-label"><input type="radio" name="q27"><span class="option-text">\(2x^3 + 6x^2 - 8\)</span></label>
+                <label class="option-label"><input type="radio" name="q27"><span class="option-text">\(2x^3 - 6x^2 + 4\)</span></label>
+                <label class="option-label"><input type="radio" name="q27"><span class="option-text">\(-2x^3 + 6x^2 - 8\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-27"></div>
+        </div>
+
+        <div class="question-box" data-q="28">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\(4(3x - 2)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q28"><span class="option-text">\(12x - 8\)</span></label>
+                <label class="option-label"><input type="radio" name="q28"><span class="option-text">\(12x - 2\)</span></label>
+                <label class="option-label"><input type="radio" name="q28"><span class="option-text">\(7x - 6\)</span></label>
+                <label class="option-label"><input type="radio" name="q28"><span class="option-text">\(12x + 8\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-28"></div>
+        </div>
+
+        <div class="question-box" data-q="29">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\(-3(x^4 - 2x^2 + x - 1)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q29"><span class="option-text">\(-3x^4 + 6x^2 - 3x + 3\)</span></label>
+                <label class="option-label"><input type="radio" name="q29"><span class="option-text">\(-3x^4 - 6x^2 - 3x - 3\)</span></label>
+                <label class="option-label"><input type="radio" name="q29"><span class="option-text">\(-3x^4 + 6x^2 + x - 1\)</span></label>
+                <label class="option-label"><input type="radio" name="q29"><span class="option-text">\(3x^4 - 6x^2 + 3x - 3\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-29"></div>
+        </div>
+
+        <div class="question-box" data-q="30">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\(5(x^2 + 4x)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q30"><span class="option-text">\(5x^2 + 20x\)</span></label>
+                <label class="option-label"><input type="radio" name="q30"><span class="option-text">\(5x^2 + 4x\)</span></label>
+                <label class="option-label"><input type="radio" name="q30"><span class="option-text">\(x^2 + 20x\)</span></label>
+                <label class="option-label"><input type="radio" name="q30"><span class="option-text">\(5x^2 + 9x\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-30"></div>
+        </div>
+
+        <button class="btn-submit" onclick="checkSection(6, 26, 30)">تحقق من إجابات القسم السادس</button>
+        <button class="btn-review" id="btn-review-6" onclick="showReview(6, 26, 30)">مراجعة الأخطاء وتصحيحها</button>
+        <div class="feedback-box" id="feedback-6"></div>
+    </div>
+
+    <!-- القسم السابع: ضرب كثيرة حدود في كثيرة حدود -->
+    <div class="section-card" id="section-7">
+        <div class="section-title">
+            <span>📌</span> 7. ضرب كثيرة حدود في كثيرة حدود
+        </div>
+        
+        <div class="question-box" data-q="31">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\((x + 2)(x + 3)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q31"><span class="option-text">\(x^2 + 5x + 6\)</span></label>
+                <label class="option-label"><input type="radio" name="q31"><span class="option-text">\(x^2 + 6x + 6\)</span></label>
+                <label class="option-label"><input type="radio" name="q31"><span class="option-text">\(x^2 + 5x + 5\)</span></label>
+                <label class="option-label"><input type="radio" name="q31"><span class="option-text">\(2x + 5\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-31"></div>
+        </div>
+
+        <div class="question-box" data-q="32">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\((x - 1)(x + 4)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q32"><span class="option-text">\(x^2 + 3x - 4\)</span></label>
+                <label class="option-label"><input type="radio" name="q32"><span class="option-text">\(x^2 - 3x - 4\)</span></label>
+                <label class="option-label"><input type="radio" name="q32"><span class="option-text">\(x^2 + 5x - 4\)</span></label>
+                <label class="option-label"><input type="radio" name="q32"><span class="option-text">\(x^2 + 3x + 4\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-32"></div>
+        </div>
+
+        <div class="question-box" data-q="33">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\((2x + 1)(x + 3)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q33"><span class="option-text">\(2x^2 + 7x + 3\)</span></label>
+                <label class="option-label"><input type="radio" name="q33"><span class="option-text">\(2x^2 + 6x + 3\)</span></label>
+                <label class="option-label"><input type="radio" name="q33"><span class="option-text">\(2x^2 + 7x + 1\)</span></label>
+                <label class="option-label"><input type="radio" name="q33"><span class="option-text">\(3x^2 + 7x + 3\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-33"></div>
+        </div>
+
+        <div class="question-box" data-q="34">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\((x^2 + 2x + 1)(x + 3)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q34"><span class="option-text">\(x^3 + 5x^2 + 7x + 3\)</span></label>
+                <label class="option-label"><input type="radio" name="q34"><span class="option-text">\(x^2 + 5x + 6\)</span></label>
+                <label class="option-label"><input type="radio" name="q34"><span class="option-text">\(x^3 + 3x^2 + 3x + 1\)</span></label>
+                <label class="option-label"><input type="radio" name="q34"><span class="option-text">\(2x^3 + 5x^2 + 3\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-34"></div>
+        </div>
+
+        <div class="question-box" data-q="35">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\((x^2 - x + 2)(x + 2)\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q35"><span class="option-text">\(x^3 + x^2 - 4\)</span></label>
+                <label class="option-label"><input type="radio" name="q35"><span class="option-text">\(x^3 + x^2 + 4\)</span></label>
+                <label class="option-label"><input type="radio" name="q35"><span class="option-text">\(x^3 + x^2 - 2x + 4\)</span></label>
+                <label class="option-label"><input type="radio" name="q35"><span class="option-text">\(x^3 + 3x^2 - 2\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-35"></div>
+        </div>
+
+        <button class="btn-submit" onclick="checkSection(7, 31, 35)">تحقق من إجابات القسم السابع</button>
+        <button class="btn-review" id="btn-review-7" onclick="showReview(7, 31, 35)">مراجعة الأخطاء وتصحيحها</button>
+        <div class="feedback-box" id="feedback-7"></div>
+    </div>
+
+    <!-- القسم الثامن: قسمة كثيرة الحدود على حد -->
+    <div class="section-card" id="section-8">
+        <div class="section-title">
+            <span>📌</span> 8. قسمة كثيرة الحدود على حد
+        </div>
+        
+        <div class="question-box" data-q="36">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\(\frac{6x^2 + 4x}{2x}\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q36"><span class="option-text">\(3x + 2\)</span></label>
+                <label class="option-label"><input type="radio" name="q36"><span class="option-text">\(3x^2 + 2\)</span></label>
+                <label class="option-label"><input type="radio" name="q36"><span class="option-text">\(6x + 2\)</span></label>
+                <label class="option-label"><input type="radio" name="q36"><span class="option-text">\(3x + 4\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-36"></div>
+        </div>
+
+        <div class="question-box" data-q="37">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\(\frac{8x^3 - 4x^2}{4x^2}\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q37"><span class="option-text">\(2x - 1\)</span></label>
+                <label class="option-label"><input type="radio" name="q37"><span class="option-text">\(2x - 4\)</span></label>
+                <label class="option-label"><input type="radio" name="q37"><span class="option-text">\(2x^2 - 1\)</span></label>
+                <label class="option-label"><input type="radio" name="q37"><span class="option-text">\(2x + 1\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-37"></div>
+        </div>
+
+        <div class="question-box" data-q="38">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\(\frac{9x^4 + 6x^2}{3x^2}\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q38"><span class="option-text">\(3x^2 + 2\)</span></label>
+                <label class="option-label"><input type="radio" name="q38"><span class="option-text">\(3x^2 + 6\)</span></label>
+                <label class="option-label"><input type="radio" name="q38"><span class="option-text">\(9x^2 + 2\)</span></label>
+                <label class="option-label"><input type="radio" name="q38"><span class="option-text">\(3x + 2\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-38"></div>
+        </div>
+
+        <div class="question-box" data-q="39">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\(\frac{10x^3 - 15x^2 + 5x}{5x}\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q39"><span class="option-text">\(2x^2 - 3x + 1\)</span></label>
+                <label class="option-label"><input type="radio" name="q39"><span class="option-text">\(2x^2 - 3x + 5\)</span></label>
+                <label class="option-label"><input type="radio" name="q39"><span class="option-text">\(2x^3 - 3x^2 + x\)</span></label>
+                <label class="option-label"><input type="radio" name="q39"><span class="option-text">\(2x^2 + 3x - 1\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-39"></div>
+        </div>
+
+        <div class="question-box" data-q="40">
+            <div class="question-text">أوجد ناتج ما يلي &nbsp;&nbsp;&nbsp;&nbsp;\(\frac{12x^2 - 8x}{-4x}\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q40"><span class="option-text">\(-3x + 2\)</span></label>
+                <label class="option-label"><input type="radio" name="q40"><span class="option-text">\(-3x - 2\)</span></label>
+                <label class="option-label"><input type="radio" name="q40"><span class="option-text">\(3x + 2\)</span></label>
+                <label class="option-label"><input type="radio" name="q40"><span class="option-text">\(-3x^2 + 2\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-40"></div>
+        </div>
+
+        <button class="btn-submit" onclick="checkSection(8, 36, 40)">تحقق من إجابات القسم الثامن</button>
+        <button class="btn-review" id="btn-review-8" onclick="showReview(8, 36, 40)">مراجعة الأخطاء وتصحيحها</button>
+        <div class="feedback-box" id="feedback-8"></div>
+    </div>
+
+    <!-- القسم التاسع: تحليل كثيرة الحدود (العامل المشترك الأكبر) -->
+    <div class="section-card" id="section-9">
+        <div class="section-title">
+            <span>📌</span> 9. تحليل كثيرة الحدود (العامل المشترك الأكبر)
+        </div>
+        
+        <div class="question-box" data-q="41">
+            <div class="question-text">حلل كثيرة الحدود التالية: &nbsp;&nbsp;&nbsp;&nbsp;\(3x^2 + 6x\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q41"><span class="option-text">\(3x(x + 2)\)</span></label>
+                <label class="option-label"><input type="radio" name="q41"><span class="option-text">\(3(x^2 + 2x)\)</span></label>
+                <label class="option-label"><input type="radio" name="q41"><span class="option-text">\(3x(x + 6)\)</span></label>
+                <label class="option-label"><input type="radio" name="q41"><span class="option-text">\(x(3x + 6)\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-41"></div>
+        </div>
+
+        <div class="question-box" data-q="42">
+            <div class="question-text">حلل كثيرة الحدود التالية: &nbsp;&nbsp;&nbsp;&nbsp;\(4x^3 - 8x^2\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q42"><span class="option-text">\(4x^2(x - 2)\)</span></label>
+                <label class="option-label"><input type="radio" name="q42"><span class="option-text">\(4x(x^2 - 2x)\)</span></label>
+                <label class="option-label"><input type="radio" name="q42"><span class="option-text">\(4x^2(x - 8)\)</span></label>
+                <label class="option-label"><input type="radio" name="q42"><span class="option-text">\(2x^2(2x - 4)\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-42"></div>
+        </div>
+
+        <div class="question-box" data-q="43">
+            <div class="question-text">حلل كثيرة الحدود التالية: &nbsp;&nbsp;&nbsp;&nbsp;\(5x^4 + 10x^2\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q43"><span class="option-text">\(5x^2(x^2 + 2)\)</span></label>
+                <label class="option-label"><input type="radio" name="q43"><span class="option-text">\(5x(x^3 + 2x)\)</span></label>
+                <label class="option-label"><input type="radio" name="q43"><span class="option-text">\(5x^2(x^2 + 10)\)</span></label>
+                <label class="option-label"><input type="radio" name="q43"><span class="option-text">\(x^2(5x^2 + 10)\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-43"></div>
+        </div>
+
+        <div class="question-box" data-q="44">
+            <div class="question-text">حلل كثيرة الحدود التالية: &nbsp;&nbsp;&nbsp;&nbsp;\(6x^3 - 9x^2 + 3x\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q44"><span class="option-text">\(3x(2x^2 - 3x + 1)\)</span></label>
+                <label class="option-label"><input type="radio" name="q44"><span class="option-text">\(3(2x^3 - 3x^2 + x)\)</span></label>
+                <label class="option-label"><input type="radio" name="q44"><span class="option-text">\(x(6x^2 - 9x + 3)\)</span></label>
+                <label class="option-label"><input type="radio" name="q44"><span class="option-text">\(3x(2x^2 - 3x)\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-44"></div>
+        </div>
+
+        <div class="question-box" data-q="45">
+            <div class="question-text">حلل كثيرة الحدود التالية: &nbsp;&nbsp;&nbsp;&nbsp;\(7x^2 + 14\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q45"><span class="option-text">\(7(x^2 + 2)\)</span></label>
+                <label class="option-label"><input type="radio" name="q45"><span class="option-text">\(7x(x + 2)\)</span></label>
+                <label class="option-label"><input type="radio" name="q45"><span class="option-text">\(7(x^2 + 14)\)</span></label>
+                <label class="option-label"><input type="radio" name="q45"><span class="option-text">\(7x(x + 14)\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-45"></div>
+        </div>
+
+        <button class="btn-submit" onclick="checkSection(9, 41, 45)">تحقق من إجابات القسم التاسع</button>
+        <button class="btn-review" id="btn-review-9" onclick="showReview(9, 41, 45)">مراجعة الأخطاء وتصحيحها</button>
+        <div class="feedback-box" id="feedback-9"></div>
+    </div>
+
+    <!-- القسم العاشر: تحليل كثيرة الحدود (الفرق بين مربعين) -->
+    <div class="section-card" id="section-10">
+        <div class="section-title">
+            <span>📌</span> 10. تحليل كثيرة الحدود (الفرق بين مربعين)
+        </div>
+        
+        <div class="question-box" data-q="46">
+            <div class="question-text">حلل كثيرة الحدود التالية: &nbsp;&nbsp;&nbsp;&nbsp;\(x^2 - 8^2\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q46"><span class="option-text">\((x + 8)(x - 8)\)</span></label>
+                <label class="option-label"><input type="radio" name="q46"><span class="option-text">\((x - 8)^2\)</span></label>
+                <label class="option-label"><input type="radio" name="q46"><span class="option-text">\((x + 8)^2\)</span></label>
+                <label class="option-label"><input type="radio" name="q46"><span class="option-text">\((x - 64)(x + 1)\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-46"></div>
+        </div>
+
+        <div class="question-box" data-q="47">
+            <div class="question-text">حلل كثيرة الحدود التالية: &nbsp;&nbsp;&nbsp;&nbsp;\(y^2 - 3^2\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q47"><span class="option-text">\((y + 3)(y - 3)\)</span></label>
+                <label class="option-label"><input type="radio" name="q47"><span class="option-text">\((y - 3)^2\)</span></label>
+                <label class="option-label"><input type="radio" name="q47"><span class="option-text">\((y + 3)^2\)</span></label>
+                <label class="option-label"><input type="radio" name="q47"><span class="option-text">\((y - 9)(y + 1)\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-47"></div>
+        </div>
+
+        <div class="question-box" data-q="48">
+            <div class="question-text">حلل كثيرة الحدود التالية: &nbsp;&nbsp;&nbsp;&nbsp;\(x^2 - 1^2\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q48"><span class="option-text">\((x + 1)(x - 1)\)</span></label>
+                <label class="option-label"><input type="radio" name="q48"><span class="option-text">\((x - 1)^2\)</span></label>
+                <label class="option-label"><input type="radio" name="q48"><span class="option-text">\((x + 1)^2\)</span></label>
+                <label class="option-label"><input type="radio" name="q48"><span class="option-text">\((x - 1)(x - 1)\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-48"></div>
+        </div>
+
+        <div class="question-box" data-q="49">
+            <div class="question-text">حلل كثيرة الحدود التالية: &nbsp;&nbsp;&nbsp;&nbsp;\(x^2 - 25\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q49"><span class="option-text">\((x + 5)(x - 5)\)</span></label>
+                <label class="option-label"><input type="radio" name="q49"><span class="option-text">\((x - 25)(x + 1)\)</span></label>
+                <label class="option-label"><input type="radio" name="q49"><span class="option-text">\((x - 5)^2\)</span></label>
+                <label class="option-label"><input type="radio" name="q49"><span class="option-text">\((x + 5)^2\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-49"></div>
+        </div>
+
+        <div class="question-box" data-q="50">
+            <div class="question-text">حلل كثيرة الحدود التالية: &nbsp;&nbsp;&nbsp;&nbsp;\(x^2 - 81\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q50"><span class="option-text">\((x + 9)(x - 9)\)</span></label>
+                <label class="option-label"><input type="radio" name="q50"><span class="option-text">\((x - 81)(x + 1)\)</span></label>
+                <label class="option-label"><input type="radio" name="q50"><span class="option-text">\((x - 9)^2\)</span></label>
+                <label class="option-label"><input type="radio" name="q50"><span class="option-text">\((x + 9)^2\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-50"></div>
+        </div>
+
+        <button class="btn-submit" onclick="checkSection(10, 46, 50)">تحقق من إجابات القسم العاشر</button>
+        <button class="btn-review" id="btn-review-10" onclick="showReview(10, 46, 50)">مراجعة الأخطاء وتصحيحها</button>
+        <div class="feedback-box" id="feedback-10"></div>
+    </div>
+
+    <!-- القسم الحادي عشر: تحليل كثيرة الحدود على الشكل ax² + bx + c -->
+    <div class="section-card" id="section-11">
+        <div class="section-title">
+            <span>📌</span> 11. تحليل كثيرة الحدود على الشكل (\(ax^2 + bx + c\))
+        </div>
+        
+        <div class="question-box" data-q="51">
+            <div class="question-text">حلل كثيرة الحدود التالية: &nbsp;&nbsp;&nbsp;&nbsp;\(x^2 + 5x + 6\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q51"><span class="option-text">\((x + 2)(x + 3)\)</span></label>
+                <label class="option-label"><input type="radio" name="q51"><span class="option-text">\((x + 1)(x + 6)\)</span></label>
+                <label class="option-label"><input type="radio" name="q51"><span class="option-text">\((x - 2)(x - 3)\)</span></label>
+                <label class="option-label"><input type="radio" name="q51"><span class="option-text">\((x + 5)(x + 1)\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-51"></div>
+        </div>
+
+        <div class="question-box" data-q="52">
+            <div class="question-text">حلل كثيرة الحدود التالية: &nbsp;&nbsp;&nbsp;&nbsp;\(x^2 + 3x + 2\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q52"><span class="option-text">\((x + 1)(x + 2)\)</span></label>
+                <label class="option-label"><input type="radio" name="q52"><span class="option-text">\((x + 3)(x + 1)\)</span></label>
+                <label class="option-label"><input type="radio" name="q52"><span class="option-text">\((x - 1)(x - 2)\)</span></label>
+                <label class="option-label"><input type="radio" name="q52"><span class="option-text">\((x + 2)(x + 2)\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-52"></div>
+        </div>
+
+        <div class="question-box" data-q="53">
+            <div class="question-text">حلل كثيرة الحدود التالية: &nbsp;&nbsp;&nbsp;&nbsp;\(x^2 + 7x + 6\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q53"><span class="option-text">\((x + 1)(x + 6)\)</span></label>
+                <label class="option-label"><input type="radio" name="q53"><span class="option-text">\((x + 2)(x + 3)\)</span></label>
+                <label class="option-label"><input type="radio" name="q53"><span class="option-text">\((x - 1)(x - 6)\)</span></label>
+                <label class="option-label"><input type="radio" name="q53"><span class="option-text">\((x + 7)(x + 1)\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-53"></div>
+        </div>
+
+        <div class="question-box" data-q="54">
+            <div class="question-text">حلل كثيرة الحدود التالية: &nbsp;&nbsp;&nbsp;&nbsp;\(x^2 - 8x + 7\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q54"><span class="option-text">\((x - 1)(x - 7)\)</span></label>
+                <label class="option-label"><input type="radio" name="q54"><span class="option-text">\((x + 1)(x + 7)\)</span></label>
+                <label class="option-label"><input type="radio" name="q54"><span class="option-text">\((x - 2)(x - 6)\)</span></label>
+                <label class="option-label"><input type="radio" name="q54"><span class="option-text">\((x - 8)(x + 1)\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-54"></div>
+        </div>
+
+        <div class="question-box" data-q="55">
+            <div class="question-text">حلل كثيرة الحدود التالية: &nbsp;&nbsp;&nbsp;&nbsp;\(x^2 - x - 12\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q55"><span class="option-text">\((x - 4)(x + 3)\)</span></label>
+                <label class="option-label"><input type="radio" name="q55"><span class="option-text">\((x + 4)(x - 3)\)</span></label>
+                <label class="option-label"><input type="radio" name="q55"><span class="option-text">\((x - 6)(x + 2)\)</span></label>
+                <label class="option-label"><input type="radio" name="q55"><span class="option-text">\((x - 12)(x + 1)\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-55"></div>
+        </div>
+
+        <button class="btn-submit" onclick="checkSection(11, 51, 55)">تحقق من إجابات القسم الحادي عشر</button>
+        <button class="btn-review" id="btn-review-11" onclick="showReview(11, 51, 55)">مراجعة الأخطاء وتصحيحها</button>
+        <div class="feedback-box" id="feedback-11"></div>
+    </div>
+
+    <!-- القسم الثاني عشر: اختصار الكسور الجبرية -->
+    <div class="section-card" id="section-12">
+        <div class="section-title">
+            <span>📌</span> 12. اختصار الكسور الجبرية
+        </div>
+        
+        <div class="question-box" data-q="56">
+            <div class="question-text">بسط الكسر الجبري التالي لأبسط صورة ممكنة: &nbsp;&nbsp;&nbsp;&nbsp;\(\frac{x^2 + 5x + 6}{x + 3}\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q56"><span class="option-text">\(x + 2\)</span></label>
+                <label class="option-label"><input type="radio" name="q56"><span class="option-text">\(x + 3\)</span></label>
+                <label class="option-label"><input type="radio" name="q56"><span class="option-text">\(x + 5\)</span></label>
+                <label class="option-label"><input type="radio" name="q56"><span class="option-text">\(x - 2\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-56"></div>
+        </div>
+
+        <div class="question-box" data-q="57">
+            <div class="question-text">بسط الكسر الجبري التالي لأبسط صورة ممكنة: &nbsp;&nbsp;&nbsp;&nbsp;\(\frac{x^2 + 10x + 9}{x + 1}\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q57"><span class="option-text">\(x + 9\)</span></label>
+                <label class="option-label"><input type="radio" name="q57"><span class="option-text">\(x + 1\)</span></label>
+                <label class="option-label"><input type="radio" name="q57"><span class="option-text">\(x + 10\)</span></label>
+                <label class="option-label"><input type="radio" name="q57"><span class="option-text">\(x - 9\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-57"></div>
+        </div>
+
+        <div class="question-box" data-q="58">
+            <div class="question-text">بسط الكسر الجبري التالي لأبسط صورة ممكنة: &nbsp;&nbsp;&nbsp;&nbsp;\(\frac{2x^2 + 4x}{x + 2}\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q58"><span class="option-text">\(2x\)</span></label>
+                <label class="option-label"><input type="radio" name="q58"><span class="option-text">\(x + 2\)</span></label>
+                <label class="option-label"><input type="radio" name="q58"><span class="option-text">\(2x + 2\)</span></label>
+                <label class="option-label"><input type="radio" name="q58"><span class="option-text">\(x\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-58"></div>
+        </div>
+
+        <div class="question-box" data-q="59">
+            <div class="question-text">بسط الكسر الجبري التالي لأبسط صورة ممكنة: &nbsp;&nbsp;&nbsp;&nbsp;\(\frac{x^2 - 9}{x - 3}\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q59"><span class="option-text">\(x + 3\)</span></label>
+                <label class="option-label"><input type="radio" name="q59"><span class="option-text">\(x - 3\)</span></label>
+                <label class="option-label"><input type="radio" name="q59"><span class="option-text">\(x + 9\)</span></label>
+                <label class="option-label"><input type="radio" name="q59"><span class="option-text">\(x - 9\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-59"></div>
+        </div>
+
+        <div class="question-box" data-q="60">
+            <div class="question-text">بسط الكسر الجبري التالي لأبسط صورة ممكنة: &nbsp;&nbsp;&nbsp;&nbsp;\(\frac{x^2 - x - 12}{x - 4}\)</div>
+            <div class="options-list random-options">
+                <label class="option-label" data-is-correct="true"><input type="radio" name="q60"><span class="option-text">\(x + 3\)</span></label>
+                <label class="option-label"><input type="radio" name="q60"><span class="option-text">\(x - 4\)</span></label>
+                <label class="option-label"><input type="radio" name="q60"><span class="option-text">\(x - 3\)</span></label>
+                <label class="option-label"><input type="radio" name="q60"><span class="option-text">\(x + 4\)</span></label>
+            </div>
+            <div class="explanation-text" id="exp-60"></div>
+        </div>
+
+        <button class="btn-submit" onclick="checkSection(12, 56, 60)">تحقق من إجابات القسم الثاني عشر</button>
+        <button class="btn-review" id="btn-review-12" onclick="showReview(12, 56, 60)">مراجعة الأخطاء وتصحيحها</button>
+        <div class="feedback-box" id="feedback-12"></div>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const letters = ['أ', 'ب', 'ج', 'د'];
+        const optionLists = document.querySelectorAll('.random-options');
+        
+        optionLists.forEach(list => {
+            const items = Array.from(list.children);
+            
+            for (let i = items.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [items[i], items[j]] = [items[j], items[i]];
+            }
+            
+            items.forEach((item, index) => {
+                list.appendChild(item);
+                
+                const radio = item.querySelector('input[type="radio"]');
+                const textSpan = item.querySelector('.option-text');
+                
+                const originalText = textSpan.getAttribute('data-orig-text') || textSpan.innerHTML;
+                if (!textSpan.getAttribute('data-orig-text')) {
+                    textSpan.setAttribute('data-orig-text', originalText);
+                }
+                
+                radio.value = letters[index];
+                textSpan.innerHTML = letters[index] + ') &nbsp;' + originalText;
+                
+                if (item.getAttribute('data-is-correct') === 'true') {
+                    const qBox = item.closest('.question-box');
+                    qBox.setAttribute('data-answer', letters[index]);
+                    
+                    const qId = qBox.getAttribute('data-q');
+                    const expDiv = document.getElementById('exp-' + qId);
+                    if(expDiv) {
+                        expDiv.innerHTML = 'الإجابة الصحيحة هي: ' + letters[index] + ') &nbsp;' + originalText;
+                    }
+                }
+            });
+        });
+
+        // تشغيل MathJax لضمان عرض الرموز الرياضية بدقة
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            window.MathJax.typesetPromise().catch((err) => console.log(err));
+        }
+    });
+
+    const concepts = {
+        1: "المعامل الرئيسي هو معامل الحد الذي يحمل أكبر درجة.",
+        2: "درجة كثيرة الحدود هي درجة أكبر حد فيها (أكبر أس).",
+        3: "الحد الثابت هو الحد الخالي من المتغيرات (لا يحتوي على x).",
+        4: "في عملية جمع كثيرات الحدود نجمع معاملات الحدود المتشابهة.<br>الحدود المتشابهة هي الحدود التي لها نفس المتغير والأس.",
+        5: "في عملية طرح كثيرات الحدود نطرح معاملات الحدود المتشابهة.<br>الحدود المتشابهة هي الحدود التي لها نفس المتغير والأس.",
+        6: "في حال ضرب العدد في كثيرة الحدود فإننا نضرب العدد في جميع معاملات كثيرات الحدود.",
+        7: "في حال ضرب كثيرة الحدود بكثيرة حدود أخرى نقوم بعملية التوزيع بحيث نضرب جميع الحدود في كثيرة الحدود الأولى بجميع الحدود في كثيرة الحدود الثانية. ومن ثم نقوم بعملية الضرب بحيث نضرب العدد في العدد ونضرب المتغير مع المتغير. وفي ضرب المتغير مع المتغير نجمع الأسس. وفي النهاية، إذا كان هناك مجال للتبسيط وكانت هناك حدود متشابهة، فنقوم بجمعها مع بعضها البعض للوصول إلى أبسط صورة ممكنة.",
+        8: "في حالة قسمة كثيرة الحدود على حد، فإننا نقسم جميع الحدود في البسط على الحد الموجود في المقام، بحيث أننا نقوم بقسمة العدد على العدد والمتغير على المتغير، بحيث نطرح أسس المتغير.",
+        9: "لتحليل كثيرة الحدود بطريقة المعامل المشترك الأكبر، أولاً نوجد المعامل المشترك الأكبر بالنسبة للأعداد وذلك بالتحليل، ونوجد المعامل المشترك الأكبر بالنسبة للمتغيرات وذلك بأخذ المتغير صاحب الأس الأقل.",
+        10: "أولاً مهم جداً أن يكون الحدين مربعين، الحد الأول مربع والثاني مربع وبينهما إشارة طرح لكي نستخدم هذه الطريقة. ومن ثم نفك قوسين بحيث يكون القوس الأول عبارة عن الحد الأول زائد الحد الثاني والقوس الثاني عبارة عن الحد الأول ناقص الحد الثاني.",
+        11: "لتحليل كثيرة الحدود على هذه الصورة، نبحث عن عددين حاصل ضربهما الحد الأخير وحاصل جمعهما الحد الأوسط.",
+        12: "لاختصار الكسر الجبري نقوم بتحليل البسط أو المقام أو كلاهما ومن ثم نختصر الحدود المشتركة في البسط والمقام."
+    };
+
+    function checkSection(sectionNum, startQ, endQ) {
+        let score = 0;
+        let total = (endQ - startQ) + 1;
+        let answeredAll = true;
+
+        for (let i = startQ; i <= endQ; i++) {
+            const radios = document.getElementsByName('q' + i);
+            let selected = null;
+            for (let r of radios) {
+                if (r.checked) {
+                    selected = r.value;
+                    break;
+                }
+            }
+            if (!selected) {
+                answeredAll = false;
+            } else {
+                const qBox = document.querySelector(`[data-q="${i}"]`);
+                const correctAns = qBox.getAttribute('data-answer');
+                if (selected === correctAns) {
+                    score++;
+                }
+            }
+        }
+
+        const feedbackBox = document.getElementById('feedback-' + sectionNum);
+        const reviewBtn = document.getElementById('btn-review-' + sectionNum);
+        feedbackBox.style.display = 'block';
+
+        if (!answeredAll) {
+            feedbackBox.className = 'feedback-box feedback-error';
+            feedbackBox.innerHTML = `⚠️ يرجى الإجابة على جميع أسئلة هذا القسم أولاً. (نتيجتك الحالية: ${score} من ${total})`;
+            reviewBtn.style.display = 'none';
+            return;
+        }
+
+        if (score === 5) {
+            feedbackBox.className = 'feedback-box feedback-success';
+            feedbackBox.innerHTML = `🌟 <strong>بوركت؛ بارك الله في جدك واجتهادك. حصلت على درجة كاملة. أتمنى لك دوام التوفيق والنجاح.</strong> (النتيجة: 5/5)`;
+            reviewBtn.style.display = 'none';
+        } else if (score === 4) {
+            feedbackBox.className = 'feedback-box feedback-warning';
+            feedbackBox.innerHTML = `👍 <strong>ممتاز، أحسنت، مستوى متقدم جداً، وبالاستمرار والاجتهاد ستصل إلى الدرجة الكاملة.</strong> (النتيجة: 4/5)`;
+            reviewBtn.style.display = 'block';
+        } else {
+            feedbackBox.className = 'feedback-box feedback-error';
+            feedbackBox.innerHTML = `
+                ❌ <strong>لا بأس، هناك دائماً مجال للتطور والنمو! نتيجتك ${score}/${total}.</strong><br><br>
+                ${concepts[sectionNum] ? `<strong>مفهوم الدرس:</strong> ${concepts[sectionNum]}<br><br>` : ''}
+                تستطيع الوصول لمستوى أفضل بكثير من خلال:<br>
+                <ol>
+                    <li>مراجعة الدرس.</li>
+                    <li>الاستفادة من فيديوهات الشرح.</li>
+                    <li>سؤال المدرب.</li>
+                </ol>
+            `;
+            reviewBtn.style.display = 'block';
+        }
+    }
+
+    function showReview(sectionNum, startQ, endQ) {
+        for (let i = startQ; i <= endQ; i++) {
+            const qBox = document.querySelector(`[data-q="${i}"]`);
+            const correctAns = qBox.getAttribute('data-answer');
+            const radios = document.getElementsByName('q' + i);
+            let selectedVal = null;
+
+            radios.forEach(r => {
+                if (r.checked) selectedVal = r.value;
+            });
+
+            const labels = qBox.querySelectorAll('.option-label');
+            labels.forEach(label => {
+                const radioInput = label.querySelector('input');
+                const val = radioInput ? radioInput.value : '';
+                label.classList.remove('correct', 'incorrect');
+                if (val === correctAns) {
+                    label.classList.add('correct');
+                } else if (val === selectedVal && selectedVal !== correctAns) {
+                    label.classList.add('incorrect');
+                }
+            });
+
+            if (selectedVal !== correctAns) {
+                document.getElementById('exp-' + i).style.display = 'block';
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
