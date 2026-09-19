@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار وحدة الأعداد النسبية والحقيقية التفاعلي</title>
+    <!-- مكتبة MathJax لعرض المعادلات والرموز الرياضية بشكل أكاديمي -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --success-color: #16a34a;
+            --error-color: #dc2626;
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 26px;
+        }
+
+        .section-tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            background: #e2e8f0;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .tab-btn.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #cbd5e1;
+        }
+
+        .quiz-section {
+            display: none;
+        }
+
+        .quiz-section.active {
+            display: block;
+        }
+
+        .question-card {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-title {
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .option-item {
+            background: white;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid #cbd5e1;
+            transition: all 0.2s;
+            font-size: 15px;
+        }
+
+        .option-item:hover {
+            border-color: var(--primary-color);
+            background: #f8fafc;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary-color);
+            background: #dbeafe;
+        }
+
+        .option-item.correct {
+            border-color: var(--success-color);
+            background: #dcfce7;
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        .option-item.incorrect {
+            border-color: var(--error-color);
+            background: #fee2e2;
+            color: var(--error-color);
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        .alert-msg {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .score-display {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: right;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .score-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--secondary-color);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .feedback-box-success {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            color: #166534;
+            font-weight: bold;
+        }
+
+        .feedback-box-excel {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            color: #1e40af;
+            font-weight: bold;
+        }
+
+        .feedback-box-retry {
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            color: #92400e;
+        }
+
+        .concept-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            color: var(--text-color);
+        }
+
+        .concept-box ul {
+            margin: 5px 0 0 0;
+            padding-right: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>اختبار وحدة الأعداد النسبية والحقيقية التفاعلي</h1>
+    
+    <!-- أزرار التنقل بين الأقسام -->
+    <div class="section-tabs" id="tabs-container"></div>
+
+    <!-- محتوى الأقسام -->
+    <div id="quiz-container"></div>
+
+    <button class="submit-btn" onclick="checkAnswers()">تحقق من الإجابات</button>
+    <div class="alert-msg" id="alert-msg">الرجاء الإجابة على جميع أسئلة القسم قبل التحقق أو الانتقال لقسم آخر!</div>
+    <div id="score-result"></div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            title: "1. الأعداد الصحيحة والعمليات عليها",
+            concept: `
+                <strong>مفهوم الدرس (قواعد العمليات على الأعداد الصحيحة):</strong>
+                <ul>
+                    <li><strong>الجمع والطرح:</strong> إذا كانت إشارة العددين نفسها نضع الإشارة ونجمع العددين، وإذا كانت إشارة العددين مختلفة نضع إشارة العدد الأكبر ونطرح العددين.</li>
+                    <li><strong>الضرب والقسمة:</strong> إذا كانت إشارة العددين نفسها يكون الناتج موجباً، وإذا كانت إشارة العددين مختلفة يكون الناتج سالباً.</li>
+                </ul>
+            `,
+            questions: [
+                { q: "\\((-5) + (-3) =\\)", options: ["\\(-8\\)", "\\(8\\)", "\\(-2\\)", "\\(2\\)"], correct: 0 },
+                { q: "\\((-12) - 4 =\\)", options: ["\\(-16\\)", "\\(16\\)", "\\(-8\\)", "\\(8\\)"], correct: 0 },
+                { q: "\\(7 + 9 =\\)", options: ["\\(-16\\)", "\\(16\\)", "\\(-2\\)", "\\(2\\)"], correct: 1 },
+                { q: "\\((-15) + (-5) =\\)", options: ["\\(20\\)", "\\(-10\\)", "\\(-20\\)", "\\(10\\)"], correct: 2 },
+                { q: "\\((-8) + 5 =\\)", options: ["\\(-13\\)", "\\(3\\)", "\\(-3\\)", "\\(13\\)"], correct: 2 },
+                { q: "\\(10 + (-4) =\\)", options: ["\\(6\\)", "\\(-6\\)", "\\(14\\)", "\\(-14\\)"], correct: 0 },
+                { q: "\\((-7) + 12 =\\)", options: ["\\(-19\\)", "\\(19\\)", "\\(-5\\)", "\\(5\\)"], correct: 3 },
+                { q: "\\(15 + (-20) =\\)", options: ["\\(5\\)", "\\(-5\\)", "\\(35\\)", "\\(-35\\)"], correct: 1 },
+                { q: "\\(6 \\times 4 =\\)", options: ["\\(-24\\)", "\\(24\\)", "\\(10\\)", "\\(-10\\)"], correct: 1 },
+                { q: "\\((-3) \\times (-7) =\\)", options: ["\\(-21\\)", "\\(21\\)", "\\(-10\\)", "\\(10\\)"], correct: 1 },
+                { q: "\\((-5) \\times (-8) =\\)", options: ["\\(-40\\)", "\\(40\\)", "\\(-13\\)", "\\(13\\)"], correct: 1 },
+                { q: "\\(9 \\times 6 =\\)", options: ["\\(54\\)", "\\(-54\\)", "\\(15\\)", "\\(-15\\)"], correct: 0 },
+                { q: "\\((-4) \\times 6 =\\)", options: ["\\(24\\)", "\\(-24\\)", "\\(2\\)", "\\(-2\\)"], correct: 1 },
+                { q: "\\(8 \\times (-3) =\\)", options: ["\\(24\\)", "\\(-24\\)", "\\(5\\)", "\\(-5\\)"], correct: 1 },
+                { q: "\\((-9) \\times 5 =\\)", options: ["\\(45\\)", "\\(-45\\)", "\\(-4\\)", "\\(4\\)"], correct: 1 },
+                { q: "\\(7 \\times (-6) =\\)", options: ["\\(42\\)", "\\(-42\\)", "\\(1\\)", "\\(-1\\)"], correct: 1 },
+                { q: "\\(20 \\div 4 =\\)", options: ["\\(-5\\)", "\\(5\\)", "\\(16\\)", "\\(-16\\)"], correct: 1 },
+                { q: "\\((-18) \\div (-3) =\\)", options: ["\\(-6\\)", "\\(6\\)", "\\(-15\\)", "\\(15\\)"], correct: 1 },
+                { q: "\\((-32) \\div (-8) =\\)", options: ["\\(-4\\)", "\\(4\\)", "\\(-40\\)", "\\(40\\)"], correct: 1 },
+                { q: "\\(45 \\div 9 =\\)", options: ["\\(5\\)", "\\(-5\\)", "\\(36\\)", "\\(-36\\)"], correct: 0 },
+                { q: "\\((-24) \\div 6 =\\)", options: ["\\(4\\)", "\\(-4\\)", "\\(-18\\)", "\\(18\\)"], correct: 1 },
+                { q: "\\(36 \\div (-9) =\\)", options: ["\\(4\\)", "\\(-4\\)", "\\(27\\)", "\\(-27\\)"], correct: 1 },
+                { q: "\\((-50) \\div 5 =\\)", options: ["\\(10\\)", "\\(-10\\)", "\\(-45\\)", "\\(45\\)"], correct: 1 },
+                { q: "\\(28 \\div (-7) =\\)", options: ["\\(4\\)", "\\(-4\\)", "\\(21\\)", "\\(-21\\)"], correct: 1 }
+            ]
+        },
+        {
+            title: "2. الأعداد النسبية والعمليات عليها",
+            concept: `
+                <strong>مفهوم الدرس (العمليات على الأعداد النسبية):</strong>
+                <ul>
+                    <li><strong>الجمع والطرح:</strong> إذا كانت المقامات متساوية فإننا نقوم بجمع أو طرح البسط ونكتب المقام كما هو. وفي حال كانت المقامات مختلفة فإننا نقوم بتوحيد المقامات وذلك بضرب المقامات في بعض وإجراء عملية المقص في البسط.</li>
+                    <li><strong>الضرب:</strong> نضرب البسط مع البسط مباشرة والمقام مع المقام مباشرة.</li>
+                    <li><strong>القسمة:</strong> لدينا طريقتان، إما نحول القسمة إلى ضرب ونقلب الكسر الثاني، أو نضرب الطرفين في الوسطين وهي طريقة المقص.</li>
+                </ul>
+            `,
+            questions: [
+                { q: "\\(\\frac{2}{7} + \\frac{3}{7} =\\)", options: ["\\(\\frac{5}{7}\\)", "\\(\\frac{5}{14}\\)", "\\(\\frac{6}{7}\\)", "\\(\\frac{1}{7}\\)"], correct: 0 },
+                { q: "\\(\\frac{-1}{5} + \\frac{4}{5} =\\)", options: ["\\(\\frac{3}{10}\\)", "\\(\\frac{-3}{5}\\)", "\\(\\frac{3}{5}\\)", "\\(\\frac{-5}{5}\\)"], correct: 2 },
+                { q: "\\(\\frac{-3}{8} + \\frac{-1}{8} =\\)", options: ["\\(\\frac{-1}{2}\\)", "\\(\\frac{-2}{8}\\)", "\\(\\frac{4}{8}\\)", "\\(\\frac{-4}{16}\\)"], correct: 0 },
+                { q: "\\(\\frac{1}{2} + \\frac{1}{3} =\\)", options: ["\\(\\frac{2}{5}\\)", "\\(\\frac{5}{6}\\)", "\\(\\frac{1}{6}\\)", "\\(\\frac{3}{5}\\)"], correct: 1 },
+                { q: "\\(\\frac{3}{4} + \\frac{1}{5} =\\)", options: ["\\(\\frac{4}{9}\\)", "\\(\\frac{7}{20}\\)", "\\(\\frac{19}{20}\\)", "\\(\\frac{4}{20}\\)"], correct: 2 },
+                { q: "\\(\\frac{-1}{3} + \\frac{2}{5} =\\)", options: ["\\(\\frac{1}{15}\\)", "\\(\\frac{1}{8}\\)", "\\(\\frac{-1}{15}\\)", "\\(\\frac{3}{8}\\)"], correct: 0 },
+                { q: "\\(\\frac{7}{9} - \\frac{2}{9} =\\)", options: ["\\(\\frac{5}{9}\\)", "\\(\\frac{5}{18}\\)", "\\(\\frac{9}{9}\\)", "\\(\\frac{-5}{9}\\)"], correct: 0 },
+                { q: "\\(\\frac{3}{4} - \\frac{5}{4} =\\)", options: ["\\(\\frac{2}{4}\\)", "\\(\\frac{-1}{2}\\)", "\\(\\frac{-2}{0}\\)", "\\(\\frac{8}{4}\\)"], correct: 1 },
+                { q: "\\(\\frac{-2}{7} - \\frac{3}{7} =\\)", options: ["\\(\\frac{1}{7}\\)", "\\(\\frac{-1}{7}\\)", "\\(\\frac{-5}{7}\\)", "\\(\\frac{5}{7}\\)"], correct: 2 },
+                { q: "\\(\\frac{3}{4} - \\frac{1}{2} =\\)", options: ["\\(\\frac{1}{4}\\)", "\\(\\frac{2}{2}\\)", "\\(\\frac{1}{2}\\)", "\\(\\frac{2}{4}\\)"], correct: 0 },
+                { q: "\\(\\frac{4}{5} - \\frac{2}{3} =\\)", options: ["\\(\\frac{2}{2}\\)", "\\(\\frac{2}{15}\\)", "\\(\\frac{-2}{15}\\)", "\\(\\frac{2}{8}\\)"], correct: 1 },
+                { q: "\\(\\frac{1}{2} - \\frac{3}{4} =\\)", options: ["\\(\\frac{1}{4}\\)", "\\(\\frac{-1}{4}\\)", "\\(\\frac{-2}{2}\\)", "\\(\\frac{2}{4}\\)"], correct: 1 },
+                { q: "\\(\\frac{2}{3} \\times \\frac{4}{5} =\\)", options: ["\\(\\frac{6}{8}\\)", "\\(\\frac{8}{15}\\)", "\\(\\frac{10}{12}\\)", "\\(\\frac{6}{15}\\)"], correct: 1 },
+                { q: "\\(\\frac{-3}{4} \\times \\frac{2}{7} =\\)", options: ["\\(\\frac{-3}{14}\\)", "\\(\\frac{-6}{11}\\)", "\\(\\frac{6}{28}\\)", "\\(\\frac{-1}{14}\\)"], correct: 0 },
+                { q: "\\(\\frac{-2}{3} \\times \\frac{-5}{7} =\\)", options: ["\\(\\frac{-10}{21}\\)", "\\(\\frac{10}{21}\\)", "\\(\\frac{-7}{10}\\)", "\\(\\frac{7}{10}\\)"], correct: 1 },
+                { q: "\\(\\frac{3}{4} \\div \\frac{1}{2} =\\)", options: ["\\(\\frac{3}{8}\\)", "\\(\\frac{3}{2}\\)", "\\(\\frac{4}{6}\\)", "\\(\\frac{2}{3}\\)"], correct: 1 },
+                { q: "\\(\\frac{-2}{5} \\div \\frac{4}{3} =\\)", options: ["\\(\\frac{-3}{10}\\)", "\\(\\frac{-8}{15}\\)", "\\(\\frac{3}{10}\\)", "\\(\\frac{-10}{12}\\)"], correct: 0 },
+                { q: "\\(\\frac{-5}{6} \\div \\left(\\frac{-2}{3}\\right) =\\)", options: ["\\(\\frac{-5}{4}\\)", "\\(\\frac{5}{4}\\)", "\\(\\frac{10}{18}\\)", "\\(\\frac{-10}{18}\\)"], correct: 1 }
+            ]
+        },
+        {
+            title: "3. الأعداد العشرية والعمليات عليها",
+            concept: `
+                <strong>مفهوم الدرس (العمليات على الأعداد العشرية):</strong>
+                <ul>
+                    <li><strong>الجمع والطرح:</strong> يتم جمع وطرح الأعداد العشرية وذلك بتوحيد عدد الخانات العشرية على يمين الفاصلة العشرية، وذلك بإضافة أصفار على يمين العدد الأقل خانات (حيث إن إضافة الأصفار على يمين العدد العشري لا تؤثر عليه). وبعد ذلك يتم جمع وطرح الاعداد في الخانات المتناظرة مع الاحتفاظ بموقع الفاصلة.</li>
+                    <li><strong>الضرب:</strong> نجري عملية الضرب كما نجريها لعددين صحيحين بدون أي اعتبار للفاصلة، وعند الانتهاء نضع الفاصلة العشرية بحيث يكون عدد الخانات العشرية مساوياً لمجموع خانات العددين العشريين.</li>
+                    <li><strong>القسمة:</strong> نتخلص من الفاصلة وذلك بضرب العددين بالعدد عشرة ومضاعفاته، ثم نقوم بالقسمة كما في الأعداد الصحيحة.</li>
+                </ul>
+            `,
+            questions: [
+                { q: "\\(3.5 + 2.1 =\\)", options: ["\\(5.6\\)", "\\(5.5\\)", "\\(6.6\\)", "\\(4.6\\)"], correct: 0 },
+                { q: "\\((-4.2) + 1.8 =\\)", options: ["\\(2.4\\)", "\\(-2.4\\)", "\\(-6.0\\)", "\\(6.0\\)"], correct: 1 },
+                { q: "\\(0.75 + 1.25 =\\)", options: ["\\(1.90\\)", "\\(2.00\\)", "\\(2.10\\)", "\\(1.50\\)"], correct: 1 },
+                { q: "\\(5.8 - 2.3 =\\)", options: ["\\(3.5\\)", "\\(3.1\\)", "\\(8.1\\)", "\\(2.5\\)"], correct: 0 },
+                { q: "\\(2.4 - 4.1 =\\)", options: ["\\(1.7\\)", "\\(-1.7\\)", "\\(-6.5\\)", "\\(6.5\\)"], correct: 1 },
+                { q: "\\((-3.6) - (-1.2) =\\)", options: ["\\(-4.8\\)", "\\(-2.4\\)", "\\(2.4\\)", "\\(4.8\\)"], correct: 1 },
+                { q: "\\(1.2 \\times 3 =\\)", options: ["\\(3.6\\)", "\\(0.36\\)", "\\(3.2\\)", "\\(36\\)"], correct: 0 },
+                { q: "\\((-0.5) \\times 0.4 =\\)", options: ["\\(0.2\\)", "\\(-0.2\\)", "\\(-0.02\\)", "\\(2.0\\)"], correct: 1 },
+                { q: "\\((-1.1) \\times (-0.2) =\\)", options: ["\\(-0.22\\)", "\\(0.22\\)", "\\(2.2\\)", "\\(-2.2\\)"], correct: 1 },
+                { q: "\\(6.4 \\div 0.8 =\\)", options: ["\\(8\\)", "\\(0.8\\)", "\\(80\\)", "\\(0.08\\)"], correct: 0 },
+                { q: "\\((-7.5) \\div 2.5 =\\)", options: ["\\(3\\)", "\\(-3\\)", "\\(-0.3\\)", "\\(0.3\\)"], correct: 1 },
+                { q: "\\((-4.8) \\div (-1.2) =\\)", options: ["\\(-4\\)", "\\(4\\)", "\\(-0.4\\)", "\\(0.4\\)"], correct: 1 }
+            ]
+        },
+        {
+            title: "4. تقريب الأعداد العشرية",
+            concept: `
+                <strong>مفهوم الدرس (تقريب الأعداد العشرية):</strong>
+                <p>عند تقريب العدد، ينظر إلى العدد الذي على يمين العدد المراد التقريب إليه:</p>
+                <ul>
+                    <li>إذا كان أقل من العدد خمسة (0، 1، 2، 3، 4)، فيبقى العدد كما هو ولا يتغير ونحذف جميع الأعداد التي على يمينه.</li>
+                    <li>إذا كان أكبر أو يساوي العدد خمسة (5، 6، 7، 8، 9)، فإننا نضيف للعدد واحداً ونحذف جميع الأعداد التي على يمينه.</li>
+                </ul>
+            `,
+            questions: [
+                { q: "تقريب العدد العشري \\(7.32\\) لأقرب عدد صحيح:", options: ["\\(7\\)", "\\(8\\)", "\\(7.3\\)", "\\(7.4\\)"], correct: 0 },
+                { q: "تقريب العدد العشري \\(15.86\\) لأقرب عدد صحيح:", options: ["\\(15\\)", "\\(16\\)", "\\(15.9\\)", "\\(15.8\\)"], correct: 1 },
+                { q: "تقريب العدد العشري \\(4.265\\) لأقرب جزء من عشرة:", options: ["\\(4.2\\)", "\\(4.3\\)", "\\(4.27\\)", "\\(4.26\\)"], correct: 1 },
+                { q: "تقريب العدد العشري \\(9.142\\) لأقرب جزء من عشرة:", options: ["\\(9.2\\)", "\\(9.1\\)", "\\(9.15\\)", "\\(9.14\\)"], correct: 1 },
+                { q: "تقريب العدد العشري \\(3.548\\) لأقرب جزء من مئة:", options: ["\\(3.54\\)", "\\(3.55\\)", "\\(3.60\\)", "\\(3.50\\)"], correct: 1 },
+                { q: "تقريب العدد العشري \\(12.034\\) لأقرب جزء من مئة:", options: ["\\(12.04\\)", "\\(12.03\\)", "\\(12.00\\)", "\\(12.10\\)"], correct: 1 },
+                { q: "تقريب العدد العشري \\(5.1237\\) لأقرب جزء من ألف:", options: ["\\(5.123\\)", "\\(5.124\\)", "\\(5.130\\)", "\\(5.120\\)"], correct: 1 },
+                { q: "تقريب العدد العشري \\(0.8462\\) لأقرب جزء من ألف:", options: ["\\(0.847\\)", "\\(0.846\\)", "\\(0.850\\)", "\\(0.800\\)"], correct: 1 }
+            ]
+        },
+        {
+            title: "5. خصائص الأعداد الحقيقية",
+            concept: `
+                <strong>مفهوم الدرس (خصائص الأعداد الحقيقية):</strong>
+                <ul>
+                    <li><strong>خاصية الإبدال:</strong> تغيير مكان العددين في الجمع والضرب لا يؤثر في نتيجة الجمع والضرب (مثل \\(A + B = B + A\\) و \\(A \\times B = B \\times A\\)).</li>
+                    <li><strong>العنصر المحايد الضربي:</strong> هو الواحد (\\(1\\)).</li>
+                    <li><strong>العنصر المحايد الجمعي:</strong> هو الصفر (\\(0\\)).</li>
+                    <li><strong>النظير الجمعي:</strong> لإيجاد النظير الجمعي للعدد نغير إشارة العدد فقط.</li>
+                    <li><strong>النظير الضربي:</strong> لإيجاد النظير الضربي للعدد نقلب العدد ولا نغير إشارته.</li>
+                </ul>
+            `,
+            questions: [
+                { q: "\\(A + B = B + A\\) و \\(A \\times B = B \\times A\\) تسمى هذه الخاصية بـ:", options: ["الإبدال", "التجميع", "التوزيع", "العنصر المحايد"], correct: 0 },
+                { q: "العنصر المحايد الضربي هو:", options: ["\\(1\\)", "\\(2\\)", "\\(3\\)", "\\(0\\)"], correct: 0 },
+                { q: "العنصر المحايد الجمعي هو:", options: ["\\(1\\)", "\\(2\\)", "\\(3\\)", "\\(0\\)"], correct: 3 },
+                { q: "النظير الضربي للعدد \\(5\\) هو:", options: ["\\(-5\\)", "\\(\\frac{1}{5}\\)", "\\(0\\)", "\\(1\\)"], correct: 1 },
+                { q: "النظير الضربي للعدد \\(-3\\) هو:", options: ["\\(3\\)", "\\(\\frac{1}{3}\\)", "\\(-\\frac{1}{3}\\)", "\\(-3\\)"], correct: 2 },
+                { q: "النظير الجمعي للعدد \\(7\\) هو:", options: ["\\(-7\\)", "\\(\\frac{1}{7}\\)", "\\(-\\frac{1}{7}\\)", "\\(0\\)"], correct: 0 },
+                { q: "النظير الجمعي للعدد \\(-4\\) هو:", options: ["\\(-\\frac{1}{4}\\)", "\\(-4\\)", "\\(4\\)", "\\(\\frac{1}{4}\\)"], correct: 2 }
+            ]
+        },
+        {
+            title: "6. ترتيب العمليات الحسابية",
+            concept: `
+                <strong>مفهوم الدرس (ترتيب العمليات الحسابية):</strong>
+                <p>لمنع حدوث أي خطأ أو التباس أثناء حل المسائل لابد من ترتيب العمليات الحسابية كالتالي:</p>
+                <ul>
+                    <li><strong>أولًا:</strong> فك الأقواس إن وجدت.</li>
+                    <li><strong>ثانيًا:</strong> حساب القوى والجذور (القوى نقصد بها الأسس).</li>
+                    <li><strong>ثالثًا:</strong> إجراء عملية الضرب أو القسمة حسب الترتيب مبتدئًا من اليسار إلى اليمين.</li>
+                    <li><strong>رابعًا:</strong> إجراء عملية الجمع أو الطرح حسب الترتيب مبتدئًا من اليسار إلى اليمين.</li>
+                </ul>
+            `,
+            questions: [
+                { q: "\\(3 + 4 \\times 2 =\\)", options: ["\\(11\\)", "\\(14\\)", "\\(10\\)", "\\(9\\)"], correct: 0 },
+                { q: "\\((5 + 3) \\times 2 =\\)", options: ["\\(11\\)", "\\(16\\)", "\\(13\\)", "\\(10\\)"], correct: 1 },
+                { q: "\\(10 - 6 \\div 2 + 1 =\\)", options: ["\\(3\\)", "\\(8\\)", "\\(6\\)", "\\(5\\)"], correct: 1 },
+                { q: "\\(2^3 + 4 \\times 3 =\\)", options: ["\\(36\\)", "\\(20\\)", "\\(24\\)", "\\(32\\)"], correct: 1 },
+                { q: "\\(15 - (2 + 3) \\times 2 =\\)", options: ["\\(20\\)", "\\(10\\)", "\\(5\\)", "\\(0\\)"], correct: 2 }
+            ]
+        }
+    ];
+
+    let currentSection = 0;
+    let userAnswers = {};
+    let sectionCompleted = {};
+
+    function renderTabs() {
+        const tabsContainer = document.getElementById('tabs-container');
+        tabsContainer.innerHTML = '';
+        quizData.forEach((sec, idx) => {
+            const btn = document.createElement('button');
+            const isUnlocked = idx === 0 || sectionCompleted[idx - 1] || sectionCompleted[idx];
+            btn.className = `tab-btn ${idx === currentSection ? 'active' : ''} ${!isUnlocked ? 'locked' : ''}`;
+            btn.innerText = sec.title;
+            btn.onclick = () => {
+                if (isUnlocked) {
+                    switchSection(idx);
+                } else {
+                    showAlert("يجب إكمال وحل جميع أسئلة القسم السابق أولاً للانتقال هنا!");
+                }
+            };
+            tabsContainer.appendChild(btn);
+        });
+    }
+
+    function renderQuiz() {
+        renderTabs();
+        const container = document.getElementById('quiz-container');
+        container.innerHTML = '';
+
+        quizData.forEach((sec, sIdx) => {
+            const secDiv = document.createElement('div');
+            secDiv.className = `quiz-section ${sIdx === currentSection ? 'active' : ''}`;
+            secDiv.id = `section-${sIdx}`;
+
+            let html = `<h2>${sec.title}</h2>`;
+            sec.questions.forEach((q, qIdx) => {
+                html += `
+                    <div class="question-card">
+                        <div class="question-title">س${qIdx + 1}: ${q.q}</div>
+                        <ul class="options-list">
+                `;
+                q.options.forEach((opt, oIdx) => {
+                    const isSelected = userAnswers[sIdx] && userAnswers[sIdx][qIdx] === oIdx ? 'selected' : '';
+                    html += `<li class="option-item ${isSelected}" onclick="selectOption(${sIdx}, ${qIdx}, ${oIdx})">${opt}</li>`;
+                });
+                html += `</ul></div>`;
+            });
+            secDiv.innerHTML = html;
+            container.appendChild(secDiv);
+        });
+
+        if (sectionCompleted[currentSection]) {
+            showScoreUI(currentSection);
+        } else {
+            document.getElementById('score-result').innerHTML = '';
+        }
+
+        if (window.MathJax) {
+            MathJax.typeset();
+        }
+    }
+
+    function switchSection(index) {
+        currentSection = index;
+        document.getElementById('alert-msg').style.display = 'none';
+        renderQuiz();
+    }
+
+    function selectOption(secIdx, qIdx, optIdx) {
+        if (!userAnswers[secIdx]) {
+            userAnswers[secIdx] = {};
+        }
+        userAnswers[secIdx][qIdx] = optIdx;
+        renderQuiz();
+    }
+
+    function showAlert(msg) {
+        const alertBox = document.getElementById('alert-msg');
+        alertBox.innerText = msg;
+        alertBox.style.display = 'block';
+    }
+
+    function checkAnswers() {
+        const currentSecQuestions = quizData[currentSection].questions.length;
+        const answeredCount = userAnswers[currentSection] ? Object.keys(userAnswers[currentSection]).length : 0;
+
+        if (answeredCount < currentSecQuestions) {
+            showAlert("الرجاء الإجابة على جميع أسئلة القسم الحالي أولاً لعرض النتيجة!");
+            return;
+        }
+
+        document.getElementById('alert-msg').style.display = 'none';
+        sectionCompleted[currentSection] = true;
+
+        let currentSecScore = 0;
+        quizData[currentSection].questions.forEach((q, qIdx) => {
+            const card = document.querySelectorAll(`#section-${currentSection} .question-card`)[qIdx];
+            const options = card.querySelectorAll('.option-item');
+            const userAns = userAnswers[currentSection][qIdx];
+
+            options.forEach((opt, oIdx) => {
+                opt.classList.remove('correct', 'incorrect');
+                if (oIdx === q.correct) {
+                    opt.classList.add('correct');
+                } else if (oIdx === userAns) {
+                    opt.classList.add('incorrect');
+                }
+            });
+
+            if (userAns === q.correct) {
+                currentSecScore++;
+            }
+        });
+
+        showScoreUI(currentSection, currentSecScore);
+        renderTabs();
+    }
+
+    function showScoreUI(secIdx, score = null) {
+        if (score === null) {
+            score = 0;
+            quizData[secIdx].questions.forEach((q, qIdx) => {
+                if (userAnswers[secIdx] && userAnswers[secIdx][qIdx] === q.correct) {
+                    score++;
+                }
+            });
+        }
+
+        const totalQ = quizData[secIdx].questions.length;
+        let resultHTML = `
+            <div class="score-display">
+                <div class="score-title">نتيجة القسم: ${score} من ${totalQ}</div>
+        `;
+
+        if (secIdx === 0) {
+            // القسم الأول (24 سؤالاً)
+            if (score >= 23) {
+                resultHTML += `
+                    <div class="feedback-box-success">
+                        بُورِكْتَ: بارك الله في جدك واجتهادك، حصلت على درجة كاملة، أتمنى لك دوام التوفيق والنجاح.
+                    </div>
+                `;
+            } else if (score >= 17 && score <= 22) {
+                resultHTML += `
+                    <div class="feedback-box-excel">
+                        ممتاز، أحسنت، مستوى متقدم جداً، وبالاستمرار والاجتهاد ستصل إلى الدرجة الكاملة.
+                    </div>
+                `;
+            } else {
+                resultHTML += `
+                    <div class="feedback-box-retry">
+                        <strong>لا بأس، هناك مجال للتطور والنمو!</strong><br>
+                        تستطيع الوصول لمستوى أفضل بكثير من خلال:<br>
+                        1. مراجعة الدرس.<br>
+                        2. الاستفادة من فيديوهات الشرح.<br>
+                        3. سؤال المدرب.
+                    </div>
+                `;
+            }
+        } else if (secIdx === 1) {
+            // القسم الثاني (18 سؤالاً)
+            if (score >= 16) {
+                resultHTML += `
+                    <div class="feedback-box-success">
+                        بُورِكْتَ: بارك الله في جدك واجتهادك، حصلت على درجة كاملة، أتمنى لك دوام التوفيق والنجاح.
+                    </div>
+                `;
+            } else if (score >= 11 && score <= 15) {
+                resultHTML += `
+                    <div class="feedback-box-excel">
+                        ممتاز، أحسنت، مستوى متقدم جداً، وبالاستمرار والاجتهاد ستصل إلى الدرجة الكاملة.
+                    </div>
+                `;
+            } else {
+                resultHTML += `
+                    <div class="feedback-box-retry">
+                        <strong>لا بأس، هناك مجال للتطور والنمو!</strong><br>
+                        تستطيع الوصول لمستوى أفضل بكثير من خلال:<br>
+                        1. مراجعة الدرس.<br>
+                        2. الاستفادة من فيديوهات الشرح.<br>
+                        3. سؤال المدرب.
+                    </div>
+                `;
+            }
+        } else if (secIdx === 2) {
+            // القسم الثالث (12 سؤالاً)
+            if (score >= 11) {
+                resultHTML += `
+                    <div class="feedback-box-success">
+                        بُورِكْتَ: بارك الله في جدك واجتهادك، حصلت على درجة كاملة، أتمنى لك دوام التوفيق والنجاح.
+                    </div>
+                `;
+            } else if (score >= 9 && score <= 10) {
+                resultHTML += `
+                    <div class="feedback-box-excel">
+                        ممتاز، أحسنت، مستوى متقدم جداً، وبالاستمرار والاجتهاد ستصل إلى الدرجة الكاملة.
+                    </div>
+                `;
+            } else {
+                resultHTML += `
+                    <div class="feedback-box-retry">
+                        <strong>لا بأس، هناك مجال للتطور والنمو!</strong><br>
+                        تستطيع الوصول لمستوى أفضل بكثير من خلال:<br>
+                        1. مراجعة الدرس.<br>
+                        2. الاستفادة من فيديوهات الشرح.<br>
+                        3. سؤال المدرب.
+                    </div>
+                `;
+            }
+        } else if (secIdx === 3) {
+            // القسم الرابع (8 أسئلة)
+            if (score === 8) {
+                resultHTML += `
+                    <div class="feedback-box-success">
+                        بُورِكْتَ: بارك الله في جدك واجتهادك، حصلت على درجة كاملة، أتمنى لك دوام التوفيق والنجاح.
+                    </div>
+                `;
+            } else if (score >= 6 && score <= 7) {
+                resultHTML += `
+                    <div class="feedback-box-excel">
+                        ممتاز، أحسنت، مستوى متقدم جداً، وبالاستمرار والاجتهاد ستصل إلى الدرجة الكاملة.
+                    </div>
+                `;
+            } else {
+                resultHTML += `
+                    <div class="feedback-box-retry">
+                        <strong>لا بأس، هناك مجال للتطور والنمو!</strong><br>
+                        تستطيع الوصول لمستوى أفضل بكثير من خلال:<br>
+                        1. مراجعة الدرس.<br>
+                        2. الاستفادة من فيديوهات الشرح.<br>
+                        3. سؤال المدرب.
+                    </div>
+                `;
+            }
+        } else if (secIdx === 4) {
+            // القسم الخامس (7 أسئلة)
+            if (score === 7) {
+                resultHTML += `
+                    <div class="feedback-box-success">
+                        بُورِكْتَ: بارك الله في جدك واجتهادك، حصلت على درجة كاملة، أتمنى لك دوام التوفيق والنجاح.
+                    </div>
+                `;
+            } else if (score === 6) {
+                resultHTML += `
+                    <div class="feedback-box-excel">
+                        ممتاز، أحسنت، مستوى متقدم جداً، وبالاستمرار والاجتهاد ستصل إلى الدرجة الكاملة.
+                    </div>
+                `;
+            } else {
+                resultHTML += `
+                    <div class="feedback-box-retry">
+                        <strong>لا بأس، هناك مجال للتطور والنمو!</strong><br>
+                        تستطيع الوصول لمستوى أفضل بكثير من خلال:<br>
+                        1. مراجعة الدرس.<br>
+                        2. الاستفادة من فيديوهات الشرح.<br>
+                        3. سؤال المدرب.
+                    </div>
+                `;
+            }
+        } else if (secIdx === 5) {
+            // القسم السادس والأخير (5 أسئلة)
+            if (score === 5) {
+                resultHTML += `
+                    <div class="feedback-box-success">
+                        بُورِكْتَ: بارك الله في جدك واجتهادك، حصلت على درجة كاملة، أتمنى لك دوام التوفيق والنجاح.
+                    </div>
+                `;
+            } else if (score === 4) {
+                resultHTML += `
+                    <div class="feedback-box-excel">
+                        ممتاز، أحسنت، مستوى متقدم جداً، وبالاستمرار والاجتهاد ستصل إلى الدرجة الكاملة.
+                    </div>
+                `;
+            } else {
+                resultHTML += `
+                    <div class="feedback-box-retry">
+                        <strong>لا بأس، هناك مجال للتطور والنمو!</strong><br>
+                        تستطيع الوصول لمستوى أفضل بكثير من خلال:<br>
+                        1. مراجعة الدرس.<br>
+                        2. الاستفادة من فيديوهات الشرح.<br>
+                        3. سؤال المدرب.
+                    </div>
+                `;
+            }
+        }
+
+        resultHTML += `
+            <div class="concept-box">
+                ${quizData[secIdx].concept}
+            </div>
+            </div>
+        `;
+
+        document.getElementById('score-result').innerHTML = resultHTML;
+
+        if (window.MathJax) {
+            MathJax.typeset();
+        }
+    }
+
+    renderQuiz();
+</script>
+
+</body>
+</html>
